@@ -57,5 +57,3 @@ run:
 clean:
 	rm -rf $(DPDK_DIR)
 	rm -f $(DPDK_TAR)
-	rm -f test/dpdk_cuckoo_test
-	rm -f log.txt
