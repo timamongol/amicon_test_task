@@ -3,6 +3,7 @@
 #include <rte_jhash.h>
 #include <rte_random.h>
 #include <rte_cycles.h>
+#include <rte_errno.h> 
 #include <stdio.h>
 #include <inttypes.h>
 
@@ -13,6 +14,9 @@
 static struct rte_hash *handle = NULL;
 
 int main(int argc, char **argv) {
+    (void)argc;
+    (void)argv; 
+
     int ret;
     uint64_t start_time, current_time;
     struct rte_hash_parameters params = {
@@ -23,9 +27,22 @@ int main(int argc, char **argv) {
         .hash_func_init_val = 0,
     };
 
-    ret = rte_eal_init(argc, argv);
+    setenv("RTE_MALLOC_DEBUG", "0", 1);
+    setenv("RTE_EAL_ALLOW_NO_HUGE", "1", 1);
+
+    // Создаем новые аргументы для DPDK EAL
+    const char *dpdk_args[] = {
+        argv[0],        // имя программы
+        "--no-huge",    // отключаем hugepages
+        "--no-pci",     // отключаем PCI (недоступно в WSL)
+        "--log-level=0" // уменьшаем логирование
+    };
+    int new_argc = sizeof(dpdk_args) / sizeof(dpdk_args[0]);
+
+    // Инициализация DPDK Environment Abstraction Layer (EAL)
+    ret = rte_eal_init(new_argc, (char **)dpdk_args);
     if (ret < 0) {
-        fprintf(stderr, "EAL initialization failed\n");
+        fprintf(stderr, "EAL initialization failed: %s\n", rte_strerror(rte_errno));
         return -1;
     }
     rte_srand(rte_rdtsc());  // Инициализация ГСЧ

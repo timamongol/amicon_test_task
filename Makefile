@@ -46,10 +46,11 @@ build_test:
 	test/main.c -o test/dpdk_cuckoo_test \
 	-L$(DPDK_DIR)/build/lib \
 	-Wl,--whole-archive \
-	-lrte_eal -lrte_hash -lrte_kvargs -lrte_ring -lrte_mempool -lrte_mbuf -lrte_net -lrte_ethdev -lrte_bus_pci -lrte_timer \
+	-lrte_eal -lrte_hash -lrte_kvargs -lrte_ring -lrte_mempool \
+	-lrte_mbuf -lrte_net -lrte_ethdev -lrte_pci -lrte_timer -lrte_telemetry \
+	-lrte_log -lrte_rcu \
 	-Wl,--no-whole-archive \
-	-lnuma -lpthread -ldl -lm -static
-
+	-lnuma -lpthread -ldl -lm
 run:
 	LD_LIBRARY_PATH=dpdk/build/lib ./test/dpdk_cuckoo_test
 
