@@ -2,9 +2,10 @@
 #include <rte_hash.h>
 #include <rte_jhash.h>
 #include <rte_random.h>
+#include <rte_cycles.h>
 #include <stdio.h>
 #include <inttypes.h>
-#include <rte_cycles.h>
+
 
 #define HASH_ENTRIES (1 << 20)  // 1 млн элементов
 #define TOTAL_KEYS (16 * 1000 * 1000)  // 16 млн ключей
